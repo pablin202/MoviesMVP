@@ -7,14 +7,15 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pdm.moviesmvp.R
 import com.pdm.moviesmvp.api.MovieEntity
+import com.pdm.moviesmvp.databinding.ActivityMainBinding
 import com.pdm.moviesmvp.ui.common.app
 import com.pdm.moviesmvp.ui.common.snackbar
-import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), MainActivityMVP.View {
 
     private val TAG = MainActivity::class.java.name
+    private lateinit var binding: ActivityMainBinding
 
     @Inject
     lateinit var presenter: MainActivityMVP.Presenter
@@ -33,9 +34,14 @@ class MainActivity : AppCompatActivity(), MainActivityMVP.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         app.component.inject(this)
-        recyclerView.apply {
+        initRv()
+    }
+
+    private fun initRv() {
+        binding.recyclerView.apply {
             itemAnimator = DefaultItemAnimator()
             adapter = moviesAdapter
             hasFixedSize()
@@ -57,7 +63,7 @@ class MainActivity : AppCompatActivity(), MainActivityMVP.View {
     }
 
     override fun showProgressBar(value: Boolean) {
-        progressBar.visibility = if (value) View.VISIBLE else View.GONE
+        binding.progressBar.visibility = if (value) View.VISIBLE else View.GONE
     }
 
     override fun updateData(movies: List<MovieEntity>) {
@@ -65,6 +71,6 @@ class MainActivity : AppCompatActivity(), MainActivityMVP.View {
     }
 
     override fun showSnackBar(message: String) {
-        root.snackbar(message)
+        binding.root.snackbar(message)
     }
 }
