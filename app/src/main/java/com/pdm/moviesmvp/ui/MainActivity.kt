@@ -27,7 +27,8 @@ class MainActivity : AppCompatActivity(), MainActivityMVP.View {
     )
 
     private val moviesAdapter by lazy {
-        MoviesAdapter() { _, _ ->
+        MoviesAdapter() { movie, _ ->
+            showSnackBar(movie.originalTitle)
             // navigateToMovieDetailsActivity(movie, view)
         }
     }

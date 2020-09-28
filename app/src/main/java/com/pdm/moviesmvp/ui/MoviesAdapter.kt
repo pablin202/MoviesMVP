@@ -6,21 +6,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.pdm.moviesmvp.R
 import com.pdm.moviesmvp.api.MovieEntity
-import kotlinx.android.synthetic.main.movie_item.view.*
+import com.pdm.moviesmvp.databinding.MovieItemBinding
 
 class MoviesAdapter constructor(
-    private val onMovieSelected: (MovieEntity, View) -> Unit
+    private val onMovieSelected: (MovieEntity, MovieItemBinding) -> Unit
 ) : RecyclerView.Adapter<MoviesAdapter.MovieCellViewHolder>() {
 
     private val movies: MutableList<MovieEntity> = mutableListOf()
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): MovieCellViewHolder {
-        val view = LayoutInflater.from(p0.context).inflate(
-            R.layout.movie_item,
-            p0,
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): MovieCellViewHolder {
+        val itemBinding = MovieItemBinding.inflate(
+            LayoutInflater.from(parent.context), parent,
             false
         )
-        return MovieCellViewHolder(view)
+
+        return  MovieCellViewHolder(itemBinding)
     }
 
     override fun onBindViewHolder(view: MovieCellViewHolder, position: Int) {
@@ -37,10 +37,10 @@ class MoviesAdapter constructor(
         notifyDataSetChanged()
     }
 
-    inner class MovieCellViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(movie: MovieEntity, listener: (MovieEntity, View) -> Unit) = with(itemView) {
+    inner class MovieCellViewHolder(private val binding: MovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(movie: MovieEntity, listener: (MovieEntity, MovieItemBinding) -> Unit) = with(binding) {
             textTitle.text = movie.title
-            setOnClickListener { listener(movie, itemView) }
+            root.setOnClickListener { listener(movie, this) }
         }
     }
 }
